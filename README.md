@@ -26,6 +26,7 @@ You can see the emitted event on the [sepholia link](https://sepolia.starkscan.c
 
 ## Frontend Link
 
+[Demo](https://stark-scaff-bsfov2vgr-jilts-projects.vercel.app/)
 
 ### Faulty UI fallback
 
