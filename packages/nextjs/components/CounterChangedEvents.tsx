@@ -7,22 +7,31 @@ const formatHash = (hash: string) => {
   return `${hash.slice(0, 6)}...${hash.slice(-4)}`;
 };
 
+const CONTRACT_NAME = "CounterContract";
+
+type CounterChangedParsedArgs = {
+  caller:string;
+  old_value:string;
+  new_value:string;
+  reason: Reason;
+};
+
+type Reason = {
+variant:Record<string, {}>;
+}
+
 export const CounterChangedEvents = () => {
-  const {
-    data: events,
-    isLoading,
-    error,
-  } = useScaffoldEventHistory({
-    contractName: "CounterContract",
+  const {data, isLoading, error} = useScaffoldEventHistory({
+    contractName: CONTRACT_NAME,
     eventName: "CounterChanged",
     fromBlock:0n,
     watch:true,
-    format:true, // Ensures event data is parsed into a readable format
+    format:true,
   });
 
   if(error) return <div className="text-error">{error.message}</div>;
 
-  if (isLoading && !events) {
+  if (isLoading && (!data || data.length === 0)) {
     return (
       <div className="flex flex-col items-center justify-center mt-8">
         <span className="loading loading-spinner loading-lg"></span>
@@ -31,53 +40,60 @@ export const CounterChangedEvents = () => {
     );
   }
 
-  // Determine if we should use real events or sample data
-  const hasRealEvents = events && events.length > 0;
+  const activeVariant = (reason: Reason) => {
+    const variant = reason.variant;
+    const keys = Object.keys(variant);
+    if (keys.length == 0) {
+      return "";
+    } else if (keys.length == 1) {
+      return keys[0];
+    } else {
+      return keys.find((k) => variant[k]) ?? "";
+    }
+  };
 
-  // Sample data to display when no real events are found.
+  const hasRealEvents = data && data.length > 0;
+
   const sampleEvents = [
     {
       log: { transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000004" },
       parsedArgs: {
         caller: "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-        old_value: 10,
-        new_value: 0,
-        reason: { Reset: {} },
+        old_value: "10",
+        new_value: "0",
+        reason: { variant: { Reset: {} } },
       },
     },
     {
       log: { transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000003" },
       parsedArgs: {
         caller: "0x0185a44c6d35868657746516a820a531413808a9d7858994344551a35016e024",
-        old_value: 9,
-        new_value: 10,
-        reason: { Increase: {} },
+        old_value: "9",
+        new_value: "10",
+        reason: { variant: { Increase: {} } },
       },
     },
     {
       log: { transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000002" },
       parsedArgs: {
         caller: "0x0185a44c6d35868657746516a820a531413808a9d7858994344551a35016e024",
-        old_value: 10,
-        new_value: 9,
-        reason: { Decrease: {} },
+        old_value: "10",
+        new_value: "9",
+        reason: { variant: { Decrease: {} } },
       },
     },
     {
       log: { transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000001" },
       parsedArgs: {
         caller: "0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-        old_value: 0,
-        new_value: 42,
-        reason: { Set: {} },
+        old_value: "0",
+        new_value: "42",
+        reason: { variant: { Set: {} } },
       },
     },
   ];
 
-  // Use real events if available, otherwise use sample data.
-  const eventsToDisplay = hasRealEvents ? events : sampleEvents;
-
-  // Reverse events to show the latest first in the timeline
+  const eventsToDisplay = hasRealEvents ? data : sampleEvents;
   const reversedEvents = [...(eventsToDisplay || [])].reverse();
 
   return (
@@ -89,7 +105,7 @@ export const CounterChangedEvents = () => {
           const caller = parsed.caller ?? "?";
           const old_value = parsed.old_value ?? "?";
           const new_value = parsed.new_value ?? "?";
-          const reasonKey = parsed.reason ? Object.keys(parsed.reason)[0] : "Unknown";
+          const reasonKey = activeVariant(parsed.reason);
           const transaction_hash = event.log?.transaction_hash ?? "";
 
           return (
@@ -130,4 +146,5 @@ export const CounterChangedEvents = () => {
       )}
     </div>
   );
-};
+
+}
