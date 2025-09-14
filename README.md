@@ -13,15 +13,20 @@ https://sepolia.starkscan.co/tx/0x4590e8232bdfab0091b5d392b227e0d09ece892121dc00
 📄 CounterContract Contract:
 https://sepolia.starkscan.co/contract/0x3749343be00ac30cdefd230fa91af5fc3734b71af3aecf39a68cc600ee135e2
 ```
-## snFoundry Test Screenshot
+## Cairo Foundry Test Screenshot
+
+![Foundry-tests](https://github.com/jilt/starknet-dev-basecamp-counter/blob/main/Screenshot.png?raw=true)
 
 You can see the emitted event on the [sepholia link](https://sepolia.starkscan.co/contract/0x3749343be00ac30cdefd230fa91af5fc3734b71af3aecf39a68cc600ee135e2
 ) as user tests.
 
-## 1. Declaration and deployment scheenshot
+## Declaration and deployment scheenshot
 
+![Deploy-sepholia](https://github.com/jilt/starknet-dev-basecamp-counter/blob/main/Screenshot-deploy.png?raw=true)
 
 
 ### Faulty UI fallback
+
+![timeline](https://github.com/jilt/starknet-dev-basecamp-counter/blob/main/Screenshot-fail.png?raw=true)
 
 The only component i wasn't able to get to work, the events timeline, i created a json fallback object to display the UI
