@@ -42,10 +42,10 @@ pub mod CounterContract {
 
     #[derive(Drop, Copy, Serde)]
     pub enum ChangeReason {
-        pub Increase,
-        pub Decrease,
-        pub Reset,
-        pub Set,
+        Increase,
+        Decrease,
+        Reset,
+        Set,
     }
 
     #[storage]
