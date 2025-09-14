@@ -10,7 +10,7 @@ export type ScaffoldConfig = {
 };
 
 const scaffoldConfig = {
-  targetNetworks: [chains.devnet],
+  targetNetworks: [chains.sepholia],
   // Only show the Burner Wallet when running on devnet
   onlyLocalBurnerWallet: false,
   // The interval at which your front-end polls the RPC servers for new data
@@ -22,7 +22,7 @@ const scaffoldConfig = {
    * 2. If user is not connected to any wallet:  On reload, connect to burner wallet if burnerWallet.enabled is true && burnerWallet.onlyLocal is false
    */
   autoConnectTTL: 60000,
-  walletAutoConnect: true,
+  walletAutoConnect: false,
 } as const satisfies ScaffoldConfig;
 
 export default scaffoldConfig;
